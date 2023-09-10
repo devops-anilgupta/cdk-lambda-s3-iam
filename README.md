@@ -1,8 +1,8 @@
 # Welcome to your CDK TypeScript project
 
-This is a blank project for CDK development with TypeScript.
+# CDK Project
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+This CDK code will help to create Lambda Function, S3 Bucket & IAM User with Permission
 
 ## Useful commands
 
