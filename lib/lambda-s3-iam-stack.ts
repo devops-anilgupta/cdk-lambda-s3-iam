@@ -10,22 +10,17 @@ export class LambdaS3IamStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // IAM User
-const iamUser = new iam.User(this, 'IAMUser', {
-  userName: 'lambda-iam-user',
+// Create an IAM role with full access to S3, CloudWatch, and Lambda
+const iamRole = new iam.Role(this, 'MyIAMRole', {
+  assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+  roleName: 'CDK-IAM-Role-For-Lambda',
 });
 
-iamUser.addManagedPolicy(
-  iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess')
-);
+// Attach managed policies for full access
+iamRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'));
+iamRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('CloudWatchFullAccess'));
+iamRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AWSLambda_FullAccess'));
 
-iamUser.addManagedPolicy(
-  iam.ManagedPolicy.fromAwsManagedPolicyName('CloudWatchFullAccess')
-);
-
-iamUser.addManagedPolicy(
-  iam.ManagedPolicy.fromAwsManagedPolicyName('AWSLambda_FullAccess')
-);
 
 // Create Lambda Function
 
@@ -34,6 +29,7 @@ const lambdaFunction = new lambda.Function(this, 'MyLambdaFunction', {
   runtime: lambda.Runtime.NODEJS_18_X,
   handler: 'index.handler',
   code: lambda.Code.fromAsset(path.join(__dirname, '../src')),
+  role: iamRole,
 });
 
 // S3 Bucket
@@ -43,7 +39,6 @@ const s3Bucket = new s3.Bucket(this, 'MyS3Bucket', {
   removalPolicy: RemovalPolicy.DESTROY,
   autoDeleteObjects: true,
 });
-
  
   }
 }
