@@ -1,6 +1,8 @@
 # Welcome to your CDK TypeScript project
 
-# CDK Project To Create Lambda Function, S3 Bucket & IAM User with Permission
+# CDK Project
+
+This CDK code will help to create Lambda Function, S3 Bucket & IAM User with Permission
 
 ## Useful commands
 
